@@ -1,0 +1,9 @@
+{
+  "mcp": {
+    "framework7": {
+      "type": "remote",
+      "url": "https://framework7.io/mcp",
+      "enabled": true
+    }
+  }
+}

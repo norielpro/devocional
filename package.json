@@ -1,0 +1,49 @@
+{
+  "name": "devocional-cristiano",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Devocional Cristiano",
+  "repository": "",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "cross-env NODE_ENV=development vite",
+    "build": "cross-env NODE_ENV=production vite build",
+    "build-capacitor-android": "cross-env NODE_ENV=production vite build && npx cap copy android",
+    "postinstall": "cpy --flat ./node_modules/framework7-icons/fonts/*.* ./src/fonts/ && cpy --flat ./node_modules/material-icons/iconfont/*.* ./src/fonts/"
+  },
+  "browserslist": [
+    "IOS >= 15",
+    "Safari >= 15",
+    "last 5 Chrome versions",
+    "last 5 Firefox versions"
+  ],
+  "dependencies": {
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/app": "^8.1.0",
+    "@capacitor/browser": "^8.0.3",
+    "@capacitor/core": "^8.3.0",
+    "@capacitor/keyboard": "^8.0.2",
+    "@capacitor/splash-screen": "^8.0.1",
+    "@capacitor/status-bar": "^8.0.2",
+    "dom7": "^4.0.6",
+    "framework7": "^9.0.3",
+    "framework7-icons": "^5.0.5",
+    "framework7-react": "^9.0.3",
+    "material-icons": "^1.13.14",
+    "prop-types": "^15.8.1",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "skeleton-elements": "^4.0.1",
+    "swiper": "^12.1.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.3.0",
+    "@vitejs/plugin-react": "^6.0.1",
+    "cordova-res": "^0.15.4",
+    "cpy-cli": "^7.0.0",
+    "cross-env": "^10.1.0",
+    "postcss-preset-env": "^11.2.0",
+    "vite": "^8.0.8"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "cwd": "X:\\app Devocional",
+  "type": [
+    "capacitor"
+  ],
+  "name": "Devocional Cristiano",
+  "framework": "react",
+  "template": "tabs",
+  "bundler": "vite",
+  "cssPreProcessor": false,
+  "theming": {
+    "customColor": false,
+    "color": "#007aff",
+    "darkMode": true,
+    "iconFonts": true
+  },
+  "customBuild": false,
+  "pkg": "io.devocional.app",
+  "capacitor": {
+    "platforms": [
+      "android"
+    ]
+  }
+}
