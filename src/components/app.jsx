@@ -23,6 +23,7 @@ import store from '../js/store';
 import HomePage from '../pages/home.jsx';
 import StudiesPage from '../pages/studies.jsx';
 import ToolsPage from '../pages/tools.jsx';
+import AdminPage from '../pages/admin.jsx';
 
 const MyApp = () => {
   const device = getDevice();
@@ -131,6 +132,7 @@ const MyApp = () => {
         </View>
         <View id="view-tools" name="tools" tab url="/tools/">
           <ToolsPage />
+          <AdminPage />
         </View>
       </Views>
     </App>

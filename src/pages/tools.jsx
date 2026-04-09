@@ -16,6 +16,7 @@ import {
   Toggle,
   Icon
 } from 'framework7-react';
+import AdminPage from './admin.jsx';
 
 const ToolsPage = () => {
   const [herramientaActiva, setHerramientaActiva] = useState('referencias');
@@ -25,6 +26,7 @@ const ToolsPage = () => {
     { id: 'cronograma', nombre: 'Cronograma', icono: '📅', descripcion: 'Planifica tu serie de mensajes' },
     { id: 'notas', nombre: 'Notas', icono: '📝', descripcion: 'Tus notas y apuntes de predicación' },
     { id: 'himnario', nombre: 'Himnario', icono: '🎵', descripcion: 'Índice de himnos y cantos' },
+    { id: 'admin', nombre: 'Admin', icono: '⚙️', descripcion: 'Administrar devocionales' },
   ];
 
   const renderHerramienta = () => {
@@ -174,6 +176,8 @@ const ToolsPage = () => {
             </Card>
           </div>
         );
+      case 'admin':
+        return <AdminPage />;
       default:
         return null;
     }
