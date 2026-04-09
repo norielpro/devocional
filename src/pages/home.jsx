@@ -1,68 +1,88 @@
 import React, { useState, useEffect } from 'react';
 import {
   Page,
-  Navbar,
-  NavTitle,
-  NavTitleLarge,
-  NavLeft,
-  Link,
   Block,
   Card,
   CardHeader,
   CardContent,
   CardFooter,
+  Link,
   Preloader
 } from 'framework7-react';
+import { Share } from '@capacitor/share';
 import store from '../js/store';
 
 const HomePage = () => {
   const [devocional, setDevocional] = useState(null);
   const [loading, setLoading] = useState(true);
   const [todosDevocionales, setTodosDevocionales] = useState([]);
+  const [key, setKey] = useState(0);
 
   useEffect(() => {
-    const loadDevocionales = () => {
+    const loadData = () => {
       const state = store.state;
       if (state.devocionales && state.devocionales.length > 0) {
         setTodosDevocionales(state.devocionales);
-        const devocionalDelDia = getDevocionalSemanal(state.devocionales);
-        setDevocional(devocionalDelDia);
+        
+        if (state.devocionalSeleccionado) {
+          setDevocional(state.devocionalSeleccionado);
+        } else {
+          const dev = getDevocionalSemanal(state.devocionales);
+          setDevocional(dev);
+        }
         setLoading(false);
       } else {
-        setTimeout(loadDevocionales, 500);
+        setTimeout(loadData, 300);
       }
     };
-    loadDevocionales();
-  }, []);
+    loadData();
+  }, [key]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const state = store.state;
+      if (state.devocionalSeleccionado && state.devocionalSeleccionado.id !== devocional?.id) {
+        console.log('Store selection changed to:', state.devocionalSeleccionado.titulo);
+        setDevocional(state.devocionalSeleccionado);
+        setKey(k => k + 1);
+      }
+    }, 500);
+    return () => clearInterval(interval);
+  }, [devocional?.id]);
 
   function getDevocionalSemanal(devocionales) {
-    if (!devocionales.length) return null;
+    if (!devocionales || devocionales.length === 0) return null;
     
     const hoy = new Date();
-    const semanaDelAnio = getWeekNumber(hoy);
-    const indice = semanaDelAnio % devocionales.length;
+    const anio = hoy.getFullYear();
+    const inicio = new Date(anio, 0, 1);
+    const diff = hoy - inicio;
+    const unaSemana = 7 * 24 * 60 * 60 * 1000;
+    const semana = Math.ceil((diff + inicio.getDay() * 24 * 60 * 60 * 1000) / unaSemana);
+    const indice = (semana - 1) % devocionales.length;
     
     return devocionales[indice] || devocionales[0];
   }
 
-  function getWeekNumber(date) {
-    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    const dayNum = d.getUTCDay() || 7;
-    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-  }
+  const compartirDevocional = async () => {
+    if (!devocional) return;
+    
+    const texto = `${devocional.titulo}\n\n${devocional.versiculo}\n\n${devocional.reflexion || ''}\n\n${devocional.oracion || ''}\n\n- Devocional Cristiano`;
+    
+    try {
+      await Share.share({
+        title: devocional.titulo,
+        text: texto,
+        dialogTitle: 'Compartir Devocional'
+      });
+    } catch (error) {
+      console.log('Error al compartir:', error);
+    }
+  };
 
   if (loading) {
     return (
       <Page name="home">
-        <Navbar large sliding={false}>
-          <NavLeft>
-            <Link iconIos="f7:menu" iconMd="material:menu" panelOpen="left" panelClose />
-          </NavLeft>
-          <NavTitle sliding>Devocional</NavTitle>
-          <NavTitleLarge>Devocional Cristiano</NavTitleLarge>
-        </Navbar>
         <Block className="text-align-center" style={{ padding: '50px' }}>
           <Preloader size="42px" />
           <p style={{ marginTop: '16px', color: '#8e8e93' }}>Cargando devocional...</p>
@@ -74,13 +94,6 @@ const HomePage = () => {
   if (!devocional) {
     return (
       <Page name="home">
-        <Navbar large sliding={false}>
-          <NavLeft>
-            <Link iconIos="f7:menu" iconMd="material:menu" panelOpen="left" panelClose />
-          </NavLeft>
-          <NavTitle sliding>Devocional</NavTitle>
-          <NavTitleLarge>Devocional Cristiano</NavTitleLarge>
-        </Navbar>
         <Block>
           <p>No hay devocionales disponibles.</p>
         </Block>
@@ -88,21 +101,15 @@ const HomePage = () => {
     );
   }
 
+  console.log('Mostrando devocional:', devocional.titulo);
+
   return (
     <Page name="home">
-      <Navbar large sliding={false}>
-        <NavLeft>
-          <Link iconIos="f7:menu" iconMd="material:menu" panelOpen="left" panelClose />
-        </NavLeft>
-        <NavTitle sliding>Devocional</NavTitle>
-        <NavTitleLarge>Devocional Cristiano</NavTitleLarge>
-      </Navbar>
-
       <Block>
         <Card className="demo-card-header-pic">
           <CardHeader className="no-border" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
             <div style={{ padding: '16px' }}>
-              <span style={{ fontSize: '12px', opacity: 0.9 }}>Devocional de la Semana</span>
+              <span style={{ fontSize: '12px', opacity: 0.9 }}>Devocional</span>
             </div>
           </CardHeader>
           <CardContent>
@@ -125,7 +132,7 @@ const HomePage = () => {
             )}
           </CardContent>
           <CardFooter>
-            <Link>Compartir</Link>
+            <Link onClick={compartirDevocional}>Compartir</Link>
             <Link>Guardar</Link>
           </CardFooter>
         </Card>
@@ -134,14 +141,12 @@ const HomePage = () => {
       {todosDevocionales.length > 1 && (
         <Block>
           <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '12px' }}>Otros Devocionales</h3>
-          {todosDevocionales.filter(d => d.id !== devocional.id).slice(0, 3).map((dev) => (
+          {todosDevocionales.slice(0, 5).map((dev) => (
             <Card key={dev.id} style={{ marginBottom: '12px' }}>
               <CardContent padding>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <h4 style={{ margin: 0, fontSize: '15px', fontWeight: '500' }}>{dev.titulo}</h4>
-                    <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#8e8e93' }}>{dev.fecha}</p>
-                  </div>
+                <div>
+                  <h4 style={{ margin: 0, fontSize: '15px', fontWeight: '500' }}>{dev.titulo}</h4>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#8e8e93' }}>{dev.fecha}</p>
                 </div>
               </CardContent>
             </Card>

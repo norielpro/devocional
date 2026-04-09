@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { getDevice } from 'framework7/lite-bundle';
 import {
   f7ready,
@@ -20,11 +20,15 @@ import {
 import capacitorApp from '../js/capacitor-app';
 import routes from '../js/routes';
 import store from '../js/store';
+import HomePage from '../pages/home.jsx';
+import StudiesPage from '../pages/studies.jsx';
+import ToolsPage from '../pages/tools.jsx';
 
 const MyApp = () => {
   const device = getDevice();
   const [devocionales, setDevocionales] = useState([]);
   const [loading, setLoading] = useState(true);
+  const f7Ref = useRef(null);
 
   const f7params = {
     name: 'Devocional Cristiano',
@@ -43,30 +47,45 @@ const MyApp = () => {
   };
 
   useEffect(() => {
-    store.dispatch('fetchDevocionales');
+    const initialState = store.state.devocionales;
+    if (initialState && initialState.length > 0) {
+      setDevocionales(initialState);
+      setLoading(false);
+    }
     
-    const loadData = () => {
-      const state = store.state;
-      if (state.devocionales) {
-        setDevocionales(state.devocionales);
+    store.dispatch('fetchDevocionales').then(() => {
+      const updatedState = store.state.devocionales;
+      if (updatedState && updatedState.length > 0) {
+        setDevocionales(updatedState);
         setLoading(false);
-      } else {
-        setTimeout(loadData, 500);
       }
-    };
-    loadData();
+    }).catch(() => {
+      if (store.state.devocionales.length > 0) {
+        setDevocionales(store.state.devocionales);
+        setLoading(false);
+      }
+    });
   }, []);
 
-  f7ready((f7) => {
+  const seleccionarDevocional = (dev) => {
+    console.log('MyApp - Seleccionando devocional:', dev.titulo);
+    store.dispatch('seleccionarDevocional', dev);
+    if (f7Ref.current) {
+      f7Ref.current.panel.close('left');
+    }
+  };
+
+  f7ready((f7Instance) => {
+    f7Ref.current = f7Instance;
     if (device.capacitor) {
-      capacitorApp.init(f7);
+      capacitorApp.init(f7Instance);
     }
   });
 
   return (
     <App { ...f7params }>
-      <Panel left cover dark>
-        <View id="panel-left">
+      <Panel left cover dark swipe>
+        <View>
           <Page>
             <Navbar title="Devocionales" />
             <Block>
@@ -79,7 +98,12 @@ const MyApp = () => {
             ) : (
               <List>
                 {devocionales.map((dev) => (
-                  <ListItem key={dev.id} link={`/devocional/${dev.id}/`} title={dev.titulo} subtitle={dev.fecha} panelClose />
+                  <ListItem 
+                    key={dev.id} 
+                    title={dev.titulo} 
+                    subtitle={dev.fecha}
+                    onClick={() => seleccionarDevocional(dev)}
+                  />
                 ))}
               </List>
             )}
@@ -96,9 +120,18 @@ const MyApp = () => {
           </ToolbarPane>
         </Toolbar>
 
-        <View id="view-home" main tab tabActive url="/" />
-        <View id="view-studies" name="studies" tab url="/studies/" />
-        <View id="view-tools" name="tools" tab url="/tools/" />
+        <View id="view-home" main tab tabActive url="/" initialPage>
+          <Navbar>
+            <Link iconIos="f7:menu" iconMd="material:menu" panelOpen="left" />
+          </Navbar>
+          <HomePage />
+        </View>
+        <View id="view-studies" name="studies" tab url="/studies/">
+          <StudiesPage />
+        </View>
+        <View id="view-tools" name="tools" tab url="/tools/">
+          <ToolsPage />
+        </View>
       </Views>
     </App>
   );

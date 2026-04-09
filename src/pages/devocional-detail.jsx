@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Page,
   Navbar,
@@ -8,16 +8,63 @@ import {
   Card,
   CardHeader,
   CardContent,
-  CardFooter
+  CardFooter,
+  Preloader
 } from 'framework7-react';
 import store from '../js/store';
 
 const DevocionalDetailPage = (props) => {
-  const { id } = props.route.params || {};
-  const devocionales = store.getState().devocionales;
-  const devocional = devocionales.find(d => String(d.id) === String(id));
+  const [devocional, setDevocional] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  useEffect(() => {
+    const id = props.id || props?.route?.params?.id;
+    console.log('Detail page - ID:', id, 'Props:', props);
+    
+    if (!id) {
+      setError('ID no proporcionado');
+      setLoading(false);
+      return;
+    }
+    
+    const loadDevocional = () => {
+      const state = store.state;
+      console.log('Detail page - State devocionales:', state.devocionales);
+      
+      if (state.devocionales && state.devocionales.length > 0) {
+        const found = state.devocionales.find(d => String(d.id) === String(id));
+        console.log('Detail page - Found:', found);
+        
+        if (found) {
+          setDevocional(found);
+        } else {
+          setError('Devocional no encontrado');
+        }
+        setLoading(false);
+      } else {
+        setTimeout(loadDevocional, 300);
+      }
+    };
+    loadDevocional();
+  }, []);
 
-  if (!devocional) {
+  if (loading) {
+    return (
+      <Page>
+        <Navbar title="Cargando..." backLink="Atrás">
+          <NavLeft>
+            <Link back iconIos="f7:chevron_left" iconMd="material:arrow_back" />
+          </NavLeft>
+        </Navbar>
+        <Block className="text-align-center" style={{ padding: '50px' }}>
+          <Preloader />
+        </Block>
+      </Page>
+    );
+  }
+
+  if (error || !devocional) {
     return (
       <Page>
         <Navbar title="Devocional" backLink="Atrás">
@@ -26,7 +73,7 @@ const DevocionalDetailPage = (props) => {
           </NavLeft>
         </Navbar>
         <Block>
-          <p>Devocional no encontrado.</p>
+          <p>{error || 'Devocional no encontrado'}</p>
         </Block>
       </Page>
     );
