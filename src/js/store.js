@@ -1,6 +1,8 @@
 import { createStore } from 'framework7/lite';
+import devocionalesData from '../../devocionales.json';
 
 const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/norielpro/devocional/main/devocionales.json';
+const USE_LOCAL = false; // Cambiar a false para producción
 const STORAGE_KEY = 'devocionales_cache';
 const CACHE_VERSION_KEY = 'devocionales_version';
 const CACHE_EXPIRY = 24 * 60 * 60 * 1000;
@@ -31,6 +33,10 @@ function setCachedData(data) {
 }
 
 function getDevocionalesFallback() {
+  if (USE_LOCAL && devocionalesData && devocionalesData.devocionales) {
+    return devocionalesData.devocionales;
+  }
+  
   const cached = getCachedData();
   if (cached) return cached;
   
@@ -73,6 +79,16 @@ const store = createStore({
   },
   actions: {
     async fetchDevocionales({ state }) {
+      if (USE_LOCAL) {
+        console.log('Modo local: usando devocionales.json del proyecto');
+        if (devocionalesData && devocionalesData.devocionales) {
+          state.devocionales = devocionalesData.devocionales;
+          setCachedData(devocionalesData.devocionales);
+        }
+        state.loading = false;
+        return;
+      }
+      
       state.loading = true;
       state.error = null;
       
