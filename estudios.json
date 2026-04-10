@@ -1,0 +1,39 @@
+{
+  "estudios": [
+    {
+      "id": 1,
+      "tema": "El Amor de Dios",
+      "autor": "Pastor Juan Pérez",
+      "imagen": "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=800",
+      "contenido": "El amor de Dios es el tema central de toda la Biblia. Desde el jardín del Edén hasta la revelación final, Dios demuestra su amor infinito por la humanidad. Juan 3:16 dice: 'Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo el que en él cree no se pierda, sino que tenga vida eterna.'\n\nEste amor es incondicional y eterno. No importa cuántas veces fallenmos, Dios siempre nos ama. La pregunta que debemos hacernos es: ¿Cómo respondemos a este amor? La respuesta es simple: amando a los demás como él nos ama."
+    },
+    {
+      "id": 2,
+      "tema": "Fe y Esperanza",
+      "autor": "María González",
+      "imagen": "https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=800",
+      "contenido": "La fe es la certeza de las cosas que se esperan y la convicción de las que no se ven (Hebreos 11:1). La esperanza, por su parte, es la confianza en las promesas de Dios que aún no se han cumplido.\n\nJuntas, fe y esperanza forman la base de nuestra relación con Dios. Cuando atravesamos pruebas y dificultades, es la fe la que nos sostiene y la esperanza la que nos mantiene mirando hacia adelante. No perdiendo de vista que Dios tiene un plan perfecto para nuestras vidas."
+    },
+    {
+      "id": 3,
+      "tema": "La Oración",
+      "autor": "Roberto López",
+      "imagen": "https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=800",
+      "contenido": "La oración es la comunicación directa con Dios. No es simplemente un ritual o una lista de peticiones, sino una conversación íntima con nuestro Padre celestial. Jesús nos enseñó a orar en privado, buscando la habitación apartada para hablar con Dios (Mateo 6:6).\n\nLa oración debe ser constante, no solo en momentos de necesidad. Pablo nos dice que oremos sin cesar (1 Tesalonicenses 5:17). Una vida de oración constante transforma nuestro corazón y nos acerca más a Dios."
+    },
+    {
+      "id": 4,
+      "tema": "El Fruto del Espíritu",
+      "autor": "Ana Martínez",
+      "imagen": "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=800",
+      "contenido": "En Gálatas 5:22-23 encontramos la lista del fruto del Espíritu: amor, alegría, paz, paciencia, benignidad, bondad, fe, mansedumbre y templanza. Este fruto es la evidencia de una vida transformada por el Espíritu Santo.\n\nA diferencia de los dones del Espíritu, el fruto se desarrolla gradualmente en nuestra vida. Requiere mortificar la carne y permitir que el Espíritu trabaje en nosotros. Cuando el fruto del Espíritu es visible en nuestras vidas, otros pueden ver a Cristo en nosotros."
+    },
+    {
+      "id": 5,
+      "tema": "Guías por el Camino",
+      "autor": "Carlos Rodríguez",
+      "imagen": "https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=800",
+      "contenido": "Salmos 23 dice: 'Jehová es mi pastor; no me faltará.' Dios nos guía como un pastor guía a sus ovejas. Él nos conduce por los senderos de justicia, incluso cuando no entendemos el camino.\n\nLas dificultades de la vida no son castigos, sino oportunidades de crecimiento. Dios usa cada experiencia para refinarnos y prepararnos para su propósito. Confía en su guía, aunque el camino parezca oscuro."
+    }
+  ]
+}
